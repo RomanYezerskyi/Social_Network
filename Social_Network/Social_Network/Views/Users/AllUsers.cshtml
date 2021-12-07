@@ -1,0 +1,43 @@
+﻿@model Social_Network.ViewModels.PageUsersViewModel
+@{
+    ViewBag.Title = "Users list";
+}
+
+<a asp-controller="Users" asp-action="Create">Add User</a>
+
+<table class="table">
+    <tr><th>NickName</th><th>Email</th><th></th></tr>
+    @foreach (var user in Model.Users)
+    {
+        <tr>
+            <td>@user.UserName</td>
+            <td>@user.Email</td>
+            <td>
+                <form asp-controller="Users" asp-action="Delete" asp-route-id="@user.Id" method="post">
+                    <a class="btn btn-sm btn-primary" asp-controller="Users" asp-action="Edit" asp-route-id="@user.Id">Edit</a>
+                    <button type="submit" class="btn btn-sm btn-danger">
+                        Delete
+                    </button>
+                </form>
+            </td>
+        </tr>
+    }
+</table>
+@if (Model.PageViewModel.HasPreviousPage)
+    {
+<a asp-action="AllUsers"
+   asp-route-pageNum="@(Model.PageViewModel.PageNumber - 1)"
+   class="btn btn-outline-dark">
+    <i class="glyphicon glyphicon-chevron-left"></i>
+    Previous
+</a>
+}
+    @if (Model.PageViewModel.HasNextPage)
+    {
+<a asp-action="AllUsers"
+   asp-route-pageNum="@(Model.PageViewModel.PageNumber + 1)"
+   class="btn btn-outline-dark">
+    Next
+    <i class="glyphicon glyphicon-chevron-right"></i>
+</a>
+  }

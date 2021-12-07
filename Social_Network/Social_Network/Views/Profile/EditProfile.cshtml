@@ -1,0 +1,64 @@
+﻿@model Social_Network.ViewModels.UserProfileViewModel
+
+
+<form asp-action="EditProfile" asp-controller="Profile" method="post" enctype="multipart/form-data">
+    <table class="table">
+        <div asp-validation-summary="ModelOnly"></div>
+        <tr>
+            <td>
+                @if (@Model.ProfileImage != null)
+                 {
+                     <img style='width: 30%; height: auto;' src="@Model.ProfileImage" />
+                 }
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div>
+                    <label asp-for="NewProfileImage">Add New profile image</label><br />
+                    <input asp-for="NewProfileImage" />
+                    <span asp-validation-for="NewProfileImage"></span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div>
+                    <label asp-for="NickName">New nickname</label><br />
+                    <input asp-for="NickName" placeholder="@Model.NickName" value="" />
+                    <span asp-validation-for="NickName"></span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div>
+                    <label asp-for="Email">New email</label><br />
+                    <input asp-for="Email" placeholder="@Model.Email" value="" />
+                    <span asp-validation-for="Email"></span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div>
+                    <label asp-for="Password"></label><br />
+                    <input asp-for="Password" placeholder="password"/>
+                    <span asp-validation-for="Password"></span>
+                </div>
+                <div>
+                    <label asp-for="PasswordConfirm"></label><br />
+                    <input asp-for="PasswordConfirm" />
+                    <span asp-validation-for="PasswordConfirm"></span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>
+                    <input type="submit" value="Update" class="btn btn-outline-secondary"/>
+                </p>
+            </td>
+        </tr>
+    </table>
+</form>

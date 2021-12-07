@@ -1,0 +1,102 @@
+﻿@using System.Collections
+@using System.Security.Claims
+@using DataAccess.Entities
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> _signInManager
+@{
+    ViewData["Title"] = "Home Page";
+}
+@{
+    var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+}
+@model Social_Network.ViewModels.PageListChatsViewModel
+<div>
+    <a asp-controller="Chats" asp-action="CreatePublicChat" class="btn btn-outline-dark">
+        Create public chat
+    </a>
+    <form asp-action="Index" method="post">
+        <div class="form-actions no-color">
+            <p>
+                Find: <input type="text" name="search" value="@ViewData["CurrentFilter"]" placeholder="Chat name" />
+                <input type="submit" value="Search" class="btn btn-default" /> |
+                <a asp-action="Index" class="btn btn-outline-dark">Back to Full List</a> |
+            </p>
+        </div>
+    </form>
+</div>
+<div>
+    <table class="table">
+        <tr>
+            <td style="max-width: 122px;">
+                Your chats:
+                <div>
+                    @foreach (var chat in Model.Chats.ToList())
+                    {
+
+                        @if (@chat.Users.FirstOrDefault(x => x.UserId == userId) != null)
+                        {
+                            <table class="table" border="1">
+                                <tr>
+                                    <td>
+                                        @if (@chat.ChatImage != null)
+                                        {
+                                            <img style='width: 30%; height: auto;  border-radius: 200px' src="@chat.ChatImage" />
+                                        }
+                                        <a class="room-button" asp-controller="Chats" asp-action="JoinChat" asp-route-id="@chat.Id">
+                                            @chat.ChatName
+                                        </a>
+                                        <br />
+                                    </td>
+                                </tr>
+                            </table>
+                        }
+                    }
+                </div>
+            </td>
+            <td style="max-width: 122px;">
+                You can join:
+                <div>
+                    @foreach (var chat in Model.Chats.ToList())
+                    {
+
+                        @if (@chat.Users.FirstOrDefault(x => x.UserId == userId) == null)
+                        {
+                            <table class="table" border="1">
+                                <tr>
+                                    <td>
+                                        @if (@chat.ChatImage != null)
+                                        {
+                                            <img style='width: 30%; height: auto;  border-radius: 200px' src="@chat.ChatImage" />
+                                        }
+                                        <a class="room-button" asp-controller="Chats" asp-action="JoinChat" asp-route-id="@chat.Id">
+                                            @chat.ChatName
+                                        </a>
+                                        <br />
+                                    </td>
+                                </tr>
+                            </table>
+                        }
+                    }
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+@if (Model.PageViewModel.HasPreviousPage)
+    {
+<a asp-action="Index"
+   asp-route-pageNum="@(Model.PageViewModel.PageNumber - 1)"
+   class="btn btn-outline-dark">
+    <i class="glyphicon glyphicon-chevron-left"></i>
+    Previous
+</a>
+}
+@if (Model.PageViewModel.HasNextPage)
+{
+<a asp-action="Index"
+   asp-route-pageNum="@(Model.PageViewModel.PageNumber + 1)"
+   class="btn btn-outline-dark">
+    Next
+    <i class="glyphicon glyphicon-chevron-right"></i>
+</a>
+  }

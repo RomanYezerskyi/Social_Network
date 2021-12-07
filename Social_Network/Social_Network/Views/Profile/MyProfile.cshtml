@@ -1,0 +1,113 @@
+﻿@model Social_Network.ViewModels.PageProfileViewModel
+@{
+    int position = 0;
+}
+
+<table class="table">
+    <tr>
+        <th></th>
+        <th>NickName</th>
+        <th>Email</th>
+        <th>Member since</th>
+    </tr>
+    <tr>
+        <td style="width: 5%">
+            @if (@Model.User.ProfileImage != null)
+            {
+                <img style='width: 200px; height: auto;' src="@Model.User.ProfileImage" />
+            }
+        </td>
+        <td>@Model.User.UserName</td>
+        <td>@Model.User.Email</td>
+        <td>@Model.User.MemberSince.ToString("dd/MM yyyy")</td>
+    </tr>
+    <tr>
+        <td>
+            <a asp-controller="Profile" asp-action="EditProfile">Update profile</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a asp-controller="Posts" asp-action="CreatePost">
+                Create Post
+            </a>
+           
+        </td>
+    </tr>
+</table>
+<div>
+    <table>
+        @if (@Model.User.Posts != null)
+        {
+            <tr style="width: 1000px">
+                <td>
+                    @foreach (var post in @Model.User.Posts)
+                    {
+                        <table class="table" border="2">
+                            <tr>
+                                <td>
+                                    <div class="progileImage">
+                                        @if (@Model.User.ProfileImage != null)
+                                        {
+                                            <img style='width: 100px; height: auto;  border-radius: 200px' src="@Model.User.ProfileImage" />
+
+                                        }
+                                    </div>
+                                </td>
+                                <td><strong>@Model.User.UserName</strong></td>
+                               
+                                <td>
+                                    <form method="post" asp-controller="Posts" asp-action="DeletePost" asp-route-postId="@post.Id" >
+                                        <input type="submit" value="Delete" class="btn btn-outline-dark"/>
+                                    </form>
+                                    <a class="btn btn-outline-dark" asp-area="" asp-controller="Posts" asp-action="EditPost" asp-route-postId="@post.Id">
+                                        Edit
+                                    </a>
+                                </td>
+                            </tr>
+                            @if (post.Images != null)
+                            {
+                                <tr>
+                                    <td colspan="3">
+                                        @foreach (var image in @post.Images)
+                                        {
+                                            <img style='width: 100px; height: auto;' src="@image.ImageData" />
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                            <tr>
+                                <td colspan="3">
+                                    <p>@post.Content</p>
+                                    <p>@post.TimeStamp</p>
+                                </td>
+                                
+                            </tr>
+                        </table>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+
+@if (Model.PageViewModel.HasPreviousPage)
+{
+    <a asp-action="MyProfile"
+       asp-route-skip="@(Model.PageViewModel.PageNumber - 1)"
+       class="btn btn-outline-dark">
+        <i class="glyphicon glyphicon-chevron-left"></i>
+        Previous
+    </a>
+}
+@if (Model.PageViewModel.HasNextPage)
+{
+    <a asp-action="MyProfile"
+       asp-route-skip="@(Model.PageViewModel.PageNumber + 1)"
+       class="btn btn-outline-dark">
+        Next
+        <i class="glyphicon glyphicon-chevron-right"></i>
+    </a>
+} 
+
+

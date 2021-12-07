@@ -1,0 +1,85 @@
+﻿@using System.Security.Claims
+@using DataAccess.Entities
+@model Social_Network.ViewModels.PageUsersInChatViewModel
+@{
+    var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+}
+@foreach (var chatModel in Model.Users.ToList())
+{
+    @if (@Model.PageViewModel.PageNumber > 1)
+    {
+        @if (chatModel.UserId == userId)
+        {
+            continue;
+        }
+    }
+    <div>
+        <table class="tableUsers">
+            <tr>
+                <td class="mainTd">
+                    @if (chatModel.User.ProfileImage != null)
+                    {
+                        <div class="imageDiv">
+                            <img class="profileImage" src="@chatModel.User.ProfileImage" />
+                            </div>
+                    }
+                </td>
+                <td class="secondTd">
+                    <a style="padding: 0%" asp-controller="Profile" asp-action="UserProfile" asp-route-userId="@chatModel.User.Id">
+                        <h3 style="text-align: left;">
+                            @chatModel.User.UserName
+                        </h3>
+                    </a>
+                    @if (@Model.Users.FirstOrDefault(x => x.UserId == userId).Role == UserRoleInChatType.Owner)
+                    {
+                        @if (chatModel.Role == UserRoleInChatType.Member)
+                        {
+                            <a asp-controller="Chats" asp-action="DeleteUserFromChat" asp-route-userId="@chatModel.UserId" asp-route-chatId="@chatModel.ChatId" class="btn btn-outline-dark">
+                                Delete from chat
+                            </a>
+                        }
+                    }
+                </td>
+                <td class="secondTd">
+                    @if (chatModel.User.IsActive)
+                    {
+                        <img style="max-width: 20px" src="/img/status.png" />
+                    }
+                    else
+                    {
+                        <p>Last time online: @chatModel.User.LastTimeOnline.ToString("dd/MM hh:mm")</p>
+                    }
+                </td>
+                <td class="secondTd">
+                    <p>@chatModel.Role</p>
+                    @if ((@Model.Users.FirstOrDefault(x => x.UserId == userId).Role == UserRoleInChatType.Owner ||
+                          @Model.Users.FirstOrDefault(x => x.UserId == userId).Role == UserRoleInChatType.Admin) && @chatModel.Role != UserRoleInChatType.Owner)
+                    {
+                        <a asp-controller="Chats" asp-action="EditUserRole" asp-route-userId="@chatModel.UserId" asp-route-chatId="@chatModel.ChatId" class="btn btn-outline-dark">
+                            Edit Role
+                        </a>
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
+    <br/>
+}
+@if (Model.PageViewModel.HasPreviousPage)
+{
+    <a asp-action="UsersInChat"
+       asp-route-pageNum="@(Model.PageViewModel.PageNumber - 1)"
+       class="btn btn-outline-dark">
+        <i class="glyphicon glyphicon-chevron-left"></i>
+        Previous
+    </a>
+}
+@if (Model.PageViewModel.HasNextPage)
+{
+    <a asp-action="UsersInChat"
+       asp-route-pageNum="@(Model.PageViewModel.PageNumber + 1)"
+       class="btn btn-outline-dark">
+        Next
+        <i class="glyphicon glyphicon-chevron-right"></i>
+    </a>
+} 

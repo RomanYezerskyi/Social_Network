@@ -1,0 +1,44 @@
+﻿@model Social_Network.ViewModels.EditPostViewModel
+
+<form asp-action="EditPost" asp-controller="Posts" method="post" enctype="multipart/form-data">
+    <table class="table">
+        <div asp-validation-summary="All"></div>
+        <input asp-for="Id" type="hidden" value="@Model.Id"/>
+        @if (@Model.Images != null)
+        {
+            <tr>
+                <td colspan="3">
+                    @foreach (var image in @Model.Images)
+                    {
+                        <img style='width: 100px; height: auto;' src="@image.ImageData" />
+                    }
+                </td>
+            </tr>
+        }
+        <tr>
+            <td>
+                <div>
+                    <label asp-for="NewImages">Add images</label><br />
+                    <input multiple asp-for="NewImages" placeholder="Choose photo"/>
+                    <span asp-validation-for="NewImages"></span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div>
+                    <label asp-for="Content">Add new content</label><br />
+                    <input asp-for="Content" value="@Model.Content" />
+                    <span asp-validation-for="Content"></span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>
+                    <input type="submit" value="Edit" />
+                </p>
+            </td>
+        </tr>
+    </table>
+</form>

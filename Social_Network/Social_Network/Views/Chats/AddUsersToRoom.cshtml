@@ -1,0 +1,117 @@
+﻿@using System.Security.Claims
+@model Social_Network.ViewModels.PageFriendRequestsViewModel
+@{
+    var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+}
+@{
+    string userFriendId = "";
+}
+@foreach (var user in Model.Friendships.ToList())
+{
+    <div>
+        <table class="table">
+            <tr>
+                <td style="width: 5%">
+                    @if (user.UserMainId == userId)
+                    {
+                        @if (@user.Friend.ProfileImage != null)
+                        {
+                            <img style='width: 100px; height: auto; border-radius: 200px;' src="@user.Friend.ProfileImage" />
+                        }
+                    }
+                    else if (user.FriendId == userId)
+                    {
+                        @if (@user.UserMain.ProfileImage != null)
+                        {
+                            <img style='width: 100px; height: auto; border-radius: 200px;' src="@user.UserMain.ProfileImage" />
+                        }
+                    }
+
+                </td>
+                <td>
+                    @if (user.UserMainId == userId)
+                    {
+                        <a style="padding: 0%" asp-controller="Profile" asp-action="UserProfile" asp-route-userId="@user.FriendId">
+                            <h3>@user.Friend.UserName</h3>
+                        </a>
+                        userFriendId = @user.FriendId;
+                    }
+                    else if (user.FriendId == userId)
+                    {
+                        <a style="padding: 0%" asp-controller="Profile" asp-action="UserProfile" asp-route-userId="@user.UserMainId">
+                            <h3>@user.UserMain.UserName</h3>
+                        </a>
+                        userFriendId = @user.UserMainId;
+                    }
+                    @if (user.Friend.Chats.Any(x=>x.ChatId == Convert.ToInt32(@ViewData["CurrentFilter"]) && x.UserId == userFriendId))
+                    {
+                        <a class="btn btn-outline-dark">
+                            Added
+                        </a>
+                    }
+                    else if (user.UserMain.Chats.Any(x => x.ChatId == Convert.ToInt32(@ViewData["CurrentFilter"]) && x.UserId == userFriendId))
+                    {
+                        <a class="btn btn-outline-dark">
+                            Added
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Chats" asp-action="AddUsersToRoom" asp-route-userId="@userFriendId" asp-route-chatId="@ViewData["CurrentFilter"]" class="btn btn-outline-dark">
+                            Add to room
+                        </a>
+                    }
+
+                </td>
+                <td>
+                    @if (user.UserMainId == userId)
+                    {
+                        <div>
+
+                            @if (@user.Friend.IsActive)
+                            {
+                                <img style="max-width: 20px" src="https://cdn.iconscout.com/icon/free/png-256/check-verified-successful-accept-tick-yes-success-2516.png" />
+                            }
+                            else
+                            {
+                                <p>Last time online: @user.Friend.LastTimeOnline.ToString("dd/MM hh:mm")</p>
+                            }
+                        </div>
+                    }
+                    else if (user.FriendId == userId)
+                    {
+                        <div>
+                            @if (@user.UserMain.IsActive)
+                            {
+                                <img style="max-width: 20px" src="https://cdn.iconscout.com/icon/free/png-256/check-verified-successful-accept-tick-yes-success-2516.png" />
+                            }
+                            else
+                            {
+                                <p>Last time online: @user.UserMain.LastTimeOnline.ToString("dd/MM hh:mm")</p>
+                            }
+                        </div>
+                    }
+                </td>
+            </tr>
+        </table>
+
+    </div>
+}
+@if (Model.PageViewModel.HasPreviousPage)
+{
+    <a asp-action="AddUsersToRoom"
+       asp-route-pageNum="@(Model.PageViewModel.PageNumber - 1)"
+       class="btn btn-outline-dark">
+        <i class="glyphicon glyphicon-chevron-left"></i>
+        Previous
+    </a>
+}
+@if (Model.PageViewModel.HasNextPage)
+{
+    <a asp-action="AddUsersToRoom"
+       asp-route-pageNum="@(Model.PageViewModel.PageNumber + 1)"
+       class="btn btn-outline-dark">
+        Next
+        <i class="glyphicon glyphicon-chevron-right"></i>
+    </a>
+}

@@ -1,0 +1,246 @@
+﻿@using DataAccess.Entities
+@using Microsoft.AspNetCore.Http
+@using System.Security.Claims
+@model Social_Network.ViewModels.PageOfChatPageViewModel
+@{
+    var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+    int check = 0;
+}
+
+
+@if (@Model.Chat.Type == ChatType.Private || ((@Model.Chat.Users.FirstOrDefault(x => x.UserId == userId).Role == UserRoleInChatType.Owner
+                                              || @Model.Chat.Users.FirstOrDefault(x => x.UserId == userId).Role == UserRoleInChatType.Admin)
+                                                  && (@Model.Chat.Type == ChatType.Publlic || @Model.Chat.Type == ChatType.PrivateRoom)))
+{
+    <a asp-controller="Chats" asp-action="ClearChat" asp-route-id="@Model.Chat.Id" class="btn btn-outline-dark">
+        Clear chat
+    </a>
+}
+@if (@Model.Chat.Type == ChatType.Publlic || @Model.Chat.Type == ChatType.PrivateRoom)
+{
+    @if (@Model.Chat.Users.FirstOrDefault(x => x.UserId == userId).Role == UserRoleInChatType.Member
+       || @Model.Chat.Users.FirstOrDefault(x => x.UserId == userId).Role == UserRoleInChatType.Admin)
+    {
+        <a asp-controller="Chats" asp-action="LeaveChat" asp-route-id="@Model.Chat.Id" class="btn btn-outline-dark">
+            Leave chat
+        </a>
+    }
+    @if (@Model.Chat.Users.FirstOrDefault(x => x.UserId == userId).Role == UserRoleInChatType.Owner)
+    {
+        <a asp-controller="Chats" asp-action="DeleteChat" asp-route-id="@Model.Chat.Id" class="btn btn-outline-dark">
+            Delete chat
+        </a>
+    }
+}
+@if ((@Model.Chat.Type == ChatType.Publlic || @Model.Chat.Type == ChatType.PrivateRoom)
+   && (@Model.Chat.Users.FirstOrDefault(x => x.UserId == userId).Role == UserRoleInChatType.Owner ||
+  @Model.Chat.Users.FirstOrDefault(x => x.UserId == userId).Role == UserRoleInChatType.Admin))
+{
+    <a asp-controller="Chats" asp-action="EditChat" asp-route-chatId="@Model.Chat.Id" class="btn btn-outline-dark">
+        Edit chat
+    </a>
+}
+@if (@Model.Chat.Type == ChatType.PrivateRoom || @Model.Chat.Type == ChatType.Publlic)
+{
+    @if (@Model.Chat.Users.FirstOrDefault(x => x.UserId == userId).Role == UserRoleInChatType.Owner ||
+      @Model.Chat.Users.FirstOrDefault(x => x.UserId == userId).Role == UserRoleInChatType.Admin)
+    {
+        <a asp-controller="Chats" asp-action="AddUsersToRoom" asp-route-chatId="@Model.Chat.Id" class="btn btn-outline-dark">
+            Add users
+        </a>
+    }
+}
+<div class="allChat">
+    <div class="chat">
+        @if (Model.PageMessagesViewModel.HasPreviousPage)
+        {
+            <a asp-action="Chat"
+               asp-route-skip="@(Model.PageMessagesViewModel.PageNumber - 1)"
+               class="btn btn-outline-dark">
+                <i class="glyphicon glyphicon-chevron-left"></i>
+                Next
+            </a>
+        }
+        @if (Model.PageMessagesViewModel.HasNextPage)
+        {
+            <a asp-action="Chat"
+               asp-route-skip="@(Model.PageMessagesViewModel.PageNumber + 1)"
+               class="btn btn-outline-dark">
+                Previous
+                <i class="glyphicon glyphicon-chevron-right"></i>
+            </a>
+        }
+        @if (@Model.Chat.Users.FirstOrDefault(x => x.UserId == userId).Role != UserRoleInChatType.Guest)
+        {
+            <form class="chat-input" enctype="multipart/form-data" asp-controller="Messages" asp-action="SendMessage">
+                <input type="hidden" name="chatId" id="chatId" value="@Model.Chat.Id.ToString()" />
+                <input type="hidden" name="userName" id="userName" value="@User.Identity.Name" />
+                <input type="text" name="text" id="message-input" />
+                <input multiple type="file" name="images" id="images" placeholder="Choose photo" />
+                <input type="submit" id="send" value="Send" class="btn btn-outline-secondary" />
+            </form>
+        }
+        else
+        {
+            <input type="hidden" name="chatId" id="chatId" value="@Model.Chat.Id.ToString()" />
+        }
+        <div class="chat-body">
+
+            @if (Model.Chat.Messages != null)
+            {
+                @foreach (var message in Model.Chat.Messages)
+                {
+                    <div class="message">
+                        <header>@message.UserName:</header>
+                        <p>@message.Text</p>
+                        <footer>@message.TimeStamp</footer>
+                    </div>
+                    <div class="messageImages">
+                        @if (message.Images != null)
+                        {
+                            @foreach (var image in message.Images)
+                            {
+                                check++;
+                                <img style='width: 30%; height: auto;' src="@image.ImageData" />
+                                if (check == 3)
+                                {
+                                    <br />
+                                    check = 0;
+                                }
+                            }
+                        }
+                    </div>
+                }
+            }
+        </div>
+    </div>
+    <div class="infoChat">
+        @if (@Model.Chat.Type == ChatType.Publlic || @Model.Chat.Type == ChatType.PrivateRoom)
+        {
+            <div class="aboutChat">
+                <table border="1">
+                    <tr>
+                        <td>
+                            <p>Опис чату:</p>
+                            @Model.Chat.AboutChat
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        }
+        <div class="usersInChat">
+            <table>
+                <tr>
+                    <td>
+                        <a asp-controller="Chats" asp-action="UsersInChat" asp-route-chatId="@Model.Chat.Id" class="btn btn-outline-dark">
+                            Users in chat
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Active: @Model.Chat.Users.Count(x => x.User.IsActive) </td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+
+</div>
+
+<script src="~/js/signalr/dist/browser/signalr.min.js"></script>
+<script>
+    const hubConnection = new signalR.HubConnectionBuilder()
+        .withUrl("/chat")
+        .build();
+
+    hubConnection.on("Send", function (text, userName, time, images) {
+
+        let message = document.createElement("div");
+        message.classList.add("message");
+        let header = document.createElement("header");
+        header.appendChild(document.createTextNode(userName + ":"));
+        let p = document.createElement("p");
+        if (text != null) {
+            p.appendChild(document.createTextNode(text));
+        }
+        let footer = document.createElement("footer");
+        footer.appendChild(document.createTextNode(time));
+        message.appendChild(header);
+        message.appendChild(p);
+        message.appendChild(footer);
+
+        if (images!=null){
+            let messageImg = document.createElement("div");
+                for (var i = 0; i < images.length; i++) {
+                    let img = document.createElement("img");
+                    img.src = images[i].toString();
+                    img.setAttribute("width", "30%");
+                    messageImg.appendChild(img);
+                }
+            document.querySelector('.chat-body').prepend(messageImg);  
+        }
+        document.querySelector('.chat-body').prepend(message);
+    });
+
+    hubConnection.start().catch(err => console.error(err.toString())).then(function () {
+        let chatId = document.getElementById("chatId").value;
+        hubConnection.invoke('getConnectionId', chatId)
+            .then(function (connectionId) {
+                console.log("connectionID: " + connectionId);
+                $("#signalRconnectionId").attr("value", connectionId);
+            });
+    });
+</script>
+
+
+
+
+
+
+
+@*<script src="~/js/signalr/dist/browser/signalr.min.js"></script>
+    <script>
+        const hubConnection = new signalR.HubConnectionBuilder()
+            .withUrl("/chat")
+            .build();
+
+        hubConnection.on("Send", function (text, userName, time, images) {
+
+            var message = document.createElement("div");
+            message.classList.add("message");
+            var header = document.createElement("header");
+            header.appendChild(document.createTextNode(userName + ":"));
+
+            var p = document.createElement("p");
+            if (text != null) {
+                p.appendChild(document.createTextNode(text));
+            }
+            var footer = document.createElement("footer");
+            footer.appendChild(document.createTextNode(time));
+            message.appendChild(header);
+            message.appendChild(p);
+            message.appendChild(footer);
+
+
+            if (images.length > 0) {
+                var messageImg = document.createElement("div");
+                messageImg.classList.add("messageImages");
+                for (var i = 0; i < images.length; i++) {
+                    var img = document.createElement("img");
+                    img.src = images[i].toString();
+                    img.setAttribute("width", "30%");
+                    messageImg.appendChild(img);
+                }
+                document.querySelector('.chat-body').append(messageImg);
+            }
+            document.querySelector('.chat-body').append(message);
+        });
+        hubConnection.start().catch(err => console.error(err.toString())).then(function () {
+            let chatId = document.getElementById("chatId").value;
+            hubConnection.invoke('getConnectionId', chatId)
+                .then(function (connectionId) {
+                    console.log("connectionID: " + connectionId);
+                    $("#signalRconnectionId").attr("value", connectionId);
+                });
+        });
+    </script>*@

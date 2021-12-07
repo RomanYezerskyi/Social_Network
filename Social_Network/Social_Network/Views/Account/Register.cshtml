@@ -1,0 +1,29 @@
+﻿@model Social_Network.ViewModels.RegisterViewModel
+<h2>Register</h2>
+<h3>Create a new account.</h3>
+<form method="post" asp-controller="Account" asp-action="Register">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div>
+        <label asp-for="NickName"></label><br />
+        <input asp-for="NickName" placeholder="Nickname"/>
+        <span asp-validation-for="NickName"></span>
+    </div>
+    <div>
+        <label asp-for="Email"></label><br />
+        <input asp-for="Email" placeholder="email"/>
+        <span asp-validation-for="Email"></span>
+    </div>
+    <div>
+        <label asp-for="Password"></label><br />
+        <input asp-for="Password" placeholder="password"/>
+        <span asp-validation-for="Password"></span>
+    </div>
+    <div>
+        <label asp-for="PasswordConfirm"></label><br />
+        <input asp-for="PasswordConfirm" />
+        <span asp-validation-for="PasswordConfirm"></span>
+    </div>
+    <div>
+        <input type="submit" value="Register" class="btn btn-outline-dark"/>
+    </div>
+</form>

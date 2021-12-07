@@ -1,0 +1,28 @@
+﻿@model Social_Network.ViewModels.CreateEditChatViewModel
+<form method="post" asp-controller="Chats" asp-action="EditChat" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input asp-for='chatId' type="hidden" value="@Model.chatId"/>
+    @if (@Model.ChatImage != null)
+    {
+        <img style='width: 30%; height: auto;' src="@Model.ChatImage" />
+    }
+    <div class="form-group">
+        <label asp-for="NewChatImage">Chat image</label><br />
+        <input asp-for="NewChatImage" />
+        <span asp-validation-for="NewChatImage"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ChatName" class="control-label">Chat name</label>
+        <input type="text" asp-for="ChatName" class="form-control" value="@Model.ChatName" />
+        <span asp-validation-for="ChatName"></span>
+
+    </div>
+    <div class="form-group">
+        <label asp-for="AboutChat" class="control-label">About chat</label>
+        <input type="text" asp-for="AboutChat" class="form-control" value="@Model.AboutChat" />
+        <span asp-validation-for="ChatName"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Edit" class="btn btn-outline-secondary" />
+    </div>
+</form>

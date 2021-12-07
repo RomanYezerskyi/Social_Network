@@ -1,0 +1,20 @@
+﻿@model Social_Network.ViewModels.CreatePostViewModel
+@{
+    ViewBag.Title = "Create post";
+}
+<form asp-action="CreatePost" asp-controller="Posts" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Images">Add images</label><br />
+        <input multiple asp-for="Images" placeholder="Choose photo"/>
+        <span asp-validation-for="Images"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Content" class="control-label">Write somethings...</label>
+        <input type="text" asp-for="Content" class="form-control" placeholder="Tell your friends about your mood ;)" />
+        <span asp-validation-for="Content"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Add" class="btn btn-outline-secondary" />
+    </div>
+</form>

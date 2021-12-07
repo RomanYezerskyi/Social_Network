@@ -1,0 +1,22 @@
+﻿@model Social_Network.ViewModels.CreateEditChatViewModel
+<form method="post" asp-controller="Chats" asp-action="CreatePrivateRoom" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="NewChatImage">Room image</label><br />
+        <input asp-for="NewChatImage" />
+        <span asp-validation-for="NewChatImage"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ChatName" class="control-label">Room name</label>
+        <input type="text" asp-for="ChatName" class="form-control" />
+        <span asp-validation-for="ChatName"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="AboutChat" class="control-label">About room</label>
+        <input type="text" asp-for="AboutChat" class="form-control" />
+        <span asp-validation-for="AboutChat"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-outline-secondary" />
+    </div>
+</form>

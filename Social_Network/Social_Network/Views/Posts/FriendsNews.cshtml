@@ -1,0 +1,62 @@
+﻿@using System.Security.Claims
+@model Social_Network.ViewModels.PagePostsViewModel
+@{
+    var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+}
+@if (Model != null)
+{
+    @foreach (var post in @Model.Posts.ToList())
+    {
+        <table class="table" border="2px">
+            <tr>
+                <td>
+                    @if (@post.User.ProfileImage != null)
+                    {
+                        <img style='width: 80px; height: auto;  border-radius: 200px' src="@post.User.ProfileImage" />
+                    }
+                </td>
+                <td>
+                    <a style="padding: 0%" asp-controller="Profile" asp-action="UserProfile" asp-route-userId="@post.User.Id">
+                        <h3 style="text-align: left;">@post.User.UserName</h3>
+                    </a>
+                </td>
+            </tr>
+            @if (post.Images != null)
+            {
+                <tr>
+                    <td colspan="3">
+                        @foreach (var image in @post.Images)
+                        {
+                            <img style='width: 100px; height: auto;' src="@image.ImageData" />
+                        }
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td colspan="3">
+                    <p>@post.Content</p>
+                    <p>@post.TimeStamp</p>
+                </td>
+
+            </tr>
+        </table>
+    }
+}
+@if (Model.PageViewModel.HasPreviousPage)
+{
+    <a asp-action="FriendsNews"
+       asp-route-pageNum="@(Model.PageViewModel.PageNumber - 1)"
+       class="btn btn-outline-dark">
+        <i class="glyphicon glyphicon-chevron-left"></i>
+        Previous
+    </a>
+}
+@if (Model.PageViewModel.HasNextPage)
+{
+    <a asp-action="FriendsNews"
+       asp-route-pageNum="@(Model.PageViewModel.PageNumber + 1)"
+       class="btn btn-outline-dark">
+        Next
+        <i class="glyphicon glyphicon-chevron-right"></i>
+    </a>
+} 

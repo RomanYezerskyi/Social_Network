@@ -1,0 +1,50 @@
+﻿@using System.Security.Claims
+@model Social_Network.ViewModels.PageFriendRequestsViewModel
+@foreach (var user in Model.Friendships.ToList())
+{
+    <div>
+        <table class="tableUsers">
+            <tr>
+                <td class="mainTd">
+                    @if (@user.Friend.ProfileImage != null)
+                    {
+                        <div class="imageDiv">
+                            <img class="profileImage" src="@user.Friend.ProfileImage" />
+                        </div>
+                    }
+                </td>
+                <td class="secondTd">
+                    <a style="padding: 0%" asp-controller="Profile" asp-action="UserProfile" asp-route-userId="@user.FriendId">
+                        <h3>@user.Friend.UserName</h3>
+                    </a>
+                </td>
+                <td class="secondTd">
+                    <a asp-controller="Friend" asp-action="DeleteFromFriend" asp-route-userId="@user.FriendId" class="btn btn-outline-dark">
+                        Reject friendship
+                    </a>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+    <br />
+}
+
+@if (Model.PageViewModel.HasPreviousPage)
+{
+    <a asp-action="FriendRequestsFromMe"
+       asp-route-pageNum="@(Model.PageViewModel.PageNumber - 1)"
+       class="btn btn-outline-dark">
+        <i class="glyphicon glyphicon-chevron-left"></i>
+        Previous
+    </a>
+}
+@if (Model.PageViewModel.HasNextPage)
+{
+    <a asp-action="FriendRequestsFromMe"
+       asp-route-pageNum="@(Model.PageViewModel.PageNumber + 1)"
+       class="btn btn-outline-dark">
+        Next
+        <i class="glyphicon glyphicon-chevron-right"></i>
+    </a>
+}

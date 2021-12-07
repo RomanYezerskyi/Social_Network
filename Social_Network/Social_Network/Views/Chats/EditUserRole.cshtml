@@ -1,0 +1,61 @@
+﻿@using System.Security.Claims
+@using DataAccess.Entities
+@model DataAccess.Entities.UsersInChats
+<div>
+    <table class="table">
+        <tr>
+            <td style="width: 5%">
+                @if (Model.User.ProfileImage != null)
+                {
+                    <div class="Image">
+                        <img style='width: 100px; height: auto; border-radius: 200px' src="@Model.User.ProfileImage" />
+                    </div>
+                }
+            </td>
+            <td>
+                <a style="padding: 0%" asp-controller="Profile" asp-action="UserProfile" asp-route-userId="@Model.User.Id">
+                    <h3 style="text-align: left;">
+                        @Model.User.UserName
+                    </h3>
+                </a>
+            </td>
+            <td>
+                @if (Model.User.IsActive)
+                {
+                    <img style="max-width: 20px" src="https://cdn.iconscout.com/icon/free/png-256/check-verified-successful-accept-tick-yes-success-2516.png" />
+                }
+                else
+                {
+                    <p>Last time online: @Model.User.LastTimeOnline.ToLocalTime().ToString("dd/MM hh:mm")</p>
+                }
+            </td>
+            <td>
+                <p>Role: @Model.Role</p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                @if (Model.Role == UserRoleInChatType.Admin)
+                {
+                    <p>
+                        Change Role: <a asp-action="EditUserRole" asp-route-userId="@Model.UserId" asp-route-chatId="@Model.ChatId" asp-route-role="1"> | Member | </a>
+                        <a asp-action="EditUserRole" asp-route-userId="@Model.UserId" asp-route-chatId="@Model.ChatId" asp-route-role="3"> | Guest | </a>
+                    </p>
+                }
+                @if (Model.Role == UserRoleInChatType.Member)
+                {
+                    <p>
+                        Change Role: <a asp-action="EditUserRole" asp-route-userId="@Model.UserId" asp-route-chatId="@Model.ChatId" asp-route-role="2"> | Admin | </a>
+                        <a asp-action="EditUserRole" asp-route-userId="@Model.UserId" asp-route-chatId="@Model.ChatId" asp-route-role="3"> | Guest | </a>
+                    </p>
+                }
+                @if (Model.Role == UserRoleInChatType.Guest)
+                {
+                    <p>
+                        Change Role: <a asp-action="EditUserRole" asp-route-userId="@Model.UserId" asp-route-chatId="@Model.ChatId" asp-route-role="1"> | Member | </a>
+                        <a asp-action="EditUserRole" asp-route-userId="@Model.UserId" asp-route-chatId="@Model.ChatId" asp-route-role="2"> | Admin | </a>
+                    </p>
+                }
+        </tr>
+    </table>
+</div>

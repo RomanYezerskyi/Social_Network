@@ -1,0 +1,121 @@
+﻿@using System.Security.Claims
+@model Social_Network.ViewModels.PageFriendRequestsViewModel
+@{
+    var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+}
+@{
+    string userFriendId = "";
+}
+<div>
+    <a class="btn btn-outline-dark" asp-area="" asp-controller="Friend" asp-action="FriendRequestsToMe">To me</a>
+    <a class="btn btn-outline-dark" asp-area="" asp-controller="Friend" asp-action="FriendRequestsFromMe">From me</a>
+</div>
+<br />
+<form asp-action="Friends" method="post">
+    <div class="form-actions no-color">
+        <p>
+            Find: <input type="text" name="search" value="@ViewData["CurrentFilter"]" />
+            <input type="submit" value="Search" class="btn btn-default" placeholder="Name or email" /> |
+            <a asp-action="Friends" class="btn btn-outline-dark">Back to Full List</a> |
+        </p>
+    </div>
+</form>
+@foreach (var user in Model.Friendships.ToList())
+{
+    <div>
+        <table class="tableUsers">
+            <tr>
+                <td class="mainTd">
+                    @if (user.UserMainId == userId)
+                    {
+                        @if (@user.Friend.ProfileImage != null)
+                        {
+                            <div class="imageDiv">
+                                <img class="profileImage" src="@user.Friend.ProfileImage" />
+                            </div>
+                        }
+                    }
+                    else if (user.FriendId == userId)
+                    {
+                        @if (@user.UserMain.ProfileImage != null)
+                        {
+                            <div class="imageDiv">
+                                <img class="profileImage" src="@user.UserMain.ProfileImage" />
+                            </div>
+                        }
+                    }
+                        </td>
+                <td class="secondTd">
+                    @if (user.UserMainId == userId)
+                    {
+                        <a style="padding: 0%" asp-controller="Profile" asp-action="UserProfile" asp-route-userId="@user.FriendId">
+                            <h3>@user.Friend.UserName</h3>
+                        </a>
+                        userFriendId = @user.FriendId;
+                    }
+                    else if (user.FriendId == userId)
+                    {
+                        <a style="padding: 0%" asp-controller="Profile" asp-action="UserProfile" asp-route-userId="@user.UserMainId">
+                            <h3>@user.UserMain.UserName</h3>
+                        </a>
+                        userFriendId = @user.UserMainId;
+                    }
+                    <a asp-controller="Friend" asp-action="DeleteFromFriend" asp-route-userId="@userFriendId" class="btn btn-outline-dark">
+                        Delete from friend
+                    </a>
+                    <a asp-controller="Chats" asp-action="GoToChatPrivate" asp-route-userId="@userFriendId" class="btn btn-outline-dark">
+                        Go to chat
+                    </a>
+                </td>
+                <td class="secondTd">
+                    @if (user.UserMainId == userId)
+                    {
+                        <div>
+
+                            @if (@user.Friend.IsActive)
+                            {
+                                <img style="max-width: 20px" src="/img/status.png" />
+                            }
+                            else
+                            {
+                                <p>Last time online: @user.Friend.LastTimeOnline.ToString("dd/MM hh:mm")</p>
+                            }
+                        </div>
+                    }
+                    else if (user.FriendId == userId)
+                    {
+                        <div>
+                            @if (@user.UserMain.IsActive)
+                            {
+                                <img style="max-width: 20px" src="/img/status.png" />
+                            }
+                            else
+                            {
+                                <p>Last time online: @user.UserMain.LastTimeOnline.ToString("dd/MM hh:mm")</p>
+                            }
+                        </div>
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
+    <br />
+}
+@if (Model.PageViewModel.HasPreviousPage)
+{
+    <a asp-action="Friends"
+       asp-route-pageNum="@(Model.PageViewModel.PageNumber - 1)"
+       class="btn btn-outline-dark">
+        <i class="glyphicon glyphicon-chevron-left"></i>
+        Previous
+    </a>
+}
+@if (Model.PageViewModel.HasNextPage)
+{
+    <a asp-action="Friends"
+       asp-route-pageNum="@(Model.PageViewModel.PageNumber + 1)"
+       class="btn btn-outline-dark">
+        Next
+        <i class="glyphicon glyphicon-chevron-right"></i>
+    </a>
+}

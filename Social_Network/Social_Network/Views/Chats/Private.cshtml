@@ -1,0 +1,94 @@
+﻿
+@using System.Security.Claims
+@using DataAccess.Entities
+@model Social_Network.ViewModels.PageListChatsViewModel
+@{
+    var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+}
+<div>
+    <a asp-controller="Chats" asp-action="CreatePrivateRoom" class="btn btn-outline-dark">
+        Create room
+    </a>
+</div>
+<div class="">
+    @if (Model != null)
+    {
+        <table class="table" border="1">
+            <tr>
+                <td style="max-width: 95px;">
+                    Chats:
+                    <div>
+                        @foreach (var chat in Model.Chats.ToList())
+                        {
+                            @if (@chat.Type == ChatType.Private)
+                            {
+                                <table class="table" border="1">
+                                    <tr>
+                                        <td>
+                                            @if (@chat.Users.FirstOrDefault(x => x.UserId != userId) != null && 
+                                                 @chat.Users.FirstOrDefault(x => x.UserId != userId).User.ProfileImage != null)
+                                            {
+                                                <img style='width: 100px; height: auto; border-radius: 200px;' src="@chat.Users.FirstOrDefault(x => x.UserId != userId).User.ProfileImage" />
+                                            }
+                                            <a class="room-button" asp-controller="Chats" asp-action="Chat" asp-route-id="@chat.Id">
+
+                                                @if (@chat.Users.FirstOrDefault(x => x.UserId != userId) != null)
+                                                {
+                                                    @chat.Users.FirstOrDefault(x => x.UserId != userId).User.UserName
+                                                }
+                                            </a>
+                                            <br />
+                                        </td>
+                                    </tr>
+                                </table>
+                            }
+                        }
+                    </div>
+                </td>
+                <td style="max-width: 122px;">
+                    Rooms:
+                    <div>
+                        @foreach (var chat in Model.Chats.ToList())
+                        {
+                            @if (@chat.Type == ChatType.PrivateRoom)
+                            {
+                                <table class="table" border="1">
+                                    <tr>
+                                        <td>
+                                            @if (@chat.ChatImage != null)
+                                            {
+                                                <img style='width: 30%; height: auto;  border-radius: 200px' src="@chat.ChatImage" />
+                                            }
+                                            <a class="room-button" asp-controller="Chats" asp-action="Chat" asp-route-id="@chat.Id">
+                                                @chat.ChatName
+                                            </a>
+                                            <br/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            }
+                        }
+                    </div>
+                </td>
+            </tr>
+        </table>
+    }
+</div>
+@if (Model.PageViewModel.HasPreviousPage)
+{
+<a asp-action="Private"
+   asp-route-pageNum="@(Model.PageViewModel.PageNumber - 1)"
+   class="btn btn-outline-dark">
+    <i class="glyphicon glyphicon-chevron-left"></i>
+    Previous 
+</a>
+}
+@if (Model.PageViewModel.HasNextPage)
+{
+<a asp-action="Private"
+   asp-route-pageNum="@(Model.PageViewModel.PageNumber + 1)"
+   class="btn btn-outline-dark">
+    Next
+    <i class="glyphicon glyphicon-chevron-right"></i>
+</a>
+  }

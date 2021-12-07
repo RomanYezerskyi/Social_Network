@@ -1,0 +1,52 @@
+﻿@model Social_Network.ViewModels.EditUserViewModel
+@{
+    ViewBag.Title = "Edit user";
+}
+<form asp-action="Edit" asp-controller="Users" method="post" enctype="multipart/form-data">
+    <table class="table">
+        <div asp-validation-summary="ModelOnly"></div>
+        <tr>
+            <td>
+
+                @if (@Model.ProfileImage != null)
+                {
+                    <img style='width: 30%; height: auto;' src="@Model.ProfileImage" />
+                }
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div>
+                    <label asp-for="NewProfileImage">Add New profile image</label><br />
+                    <input asp-for="NewProfileImage" />
+                    <span asp-validation-for="NewProfileImage"></span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div>
+                    <label asp-for="NickName"></label><br />
+                    <input asp-for="NickName" placeholder="@Model.NickName" value="" />
+                    <span asp-validation-for="NickName"></span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div>
+                    <label asp-for="Email"></label><br />
+                    <input asp-for="Email" placeholder="@Model.Email" value="" />
+                    <span asp-validation-for="Email"></span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>
+                    <input type="submit" value="Добавить" />
+                </p>
+            </td>
+        </tr>
+    </table>
+</form>
