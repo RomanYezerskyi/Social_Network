@@ -12,7 +12,7 @@ namespace Social_Network.ViewModels
     {
         public int chatId { get; set; }
         [Required]
-        [StringLength(10, MinimumLength = 3, ErrorMessage ="The name must be between 3 and 10 characters long")]
+        [StringLength(20, MinimumLength = 3, ErrorMessage ="The name must be between 3 and 10 characters long")]
         public string ChatName { get; set; }
         public string ChatImage { get; set; }
         [StringLength(50, MinimumLength = 0, ErrorMessage = "Next must be between 3 and 50 characters long")]

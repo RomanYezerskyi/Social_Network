@@ -12,7 +12,7 @@ namespace BusinessLogic.Services
 {
     public class MessageService: IMessageService
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork; 
         private readonly IImagesService _imagesService;
         public MessageService(IUnitOfWork unitOfWork, IImagesService imagesService)
         {
@@ -26,7 +26,7 @@ namespace BusinessLogic.Services
                 ChatId = chatId,
                 Text = messageText,
                 UserName = userName,
-                TimeStamp = DateTime.Now.ToLocalTime()
+                TimeStamp = DateTime.Now
             };
             await _unitOfWork.Messages.InsertAsync(message);
             if (files.Count > 0)

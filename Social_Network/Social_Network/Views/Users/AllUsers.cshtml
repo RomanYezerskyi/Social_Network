@@ -2,7 +2,15 @@
 @{
     ViewBag.Title = "Users list";
 }
-
+<form asp-action="AllUsers" method="post">
+    <div class="form-actions no-color">
+        <p>
+            Find: <input type="text" name="search" value="@ViewData["CurrentFilter"]" placeholder="Name or email" />
+            <input type="submit" value="Search" class="btn btn-default" /> |
+            <a asp-action="AllUsers" class="btn btn-outline-dark">Back to Full List</a> |
+        </p>
+    </div>
+</form>
 <a asp-controller="Users" asp-action="Create">Add User</a>
 
 <table class="table">

@@ -50,6 +50,8 @@
         </a>
     }
 }
+<br/>
+<br/>
 <div class="allChat">
     <div class="chat">
         @if (Model.PageMessagesViewModel.HasPreviousPage)
@@ -144,7 +146,6 @@
 
         </div>
     </div>
-
 </div>
 
 <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
@@ -191,56 +192,3 @@
             });
     });
 </script>
-
-
-
-
-
-
-
-@*<script src="~/js/signalr/dist/browser/signalr.min.js"></script>
-    <script>
-        const hubConnection = new signalR.HubConnectionBuilder()
-            .withUrl("/chat")
-            .build();
-
-        hubConnection.on("Send", function (text, userName, time, images) {
-
-            var message = document.createElement("div");
-            message.classList.add("message");
-            var header = document.createElement("header");
-            header.appendChild(document.createTextNode(userName + ":"));
-
-            var p = document.createElement("p");
-            if (text != null) {
-                p.appendChild(document.createTextNode(text));
-            }
-            var footer = document.createElement("footer");
-            footer.appendChild(document.createTextNode(time));
-            message.appendChild(header);
-            message.appendChild(p);
-            message.appendChild(footer);
-
-
-            if (images.length > 0) {
-                var messageImg = document.createElement("div");
-                messageImg.classList.add("messageImages");
-                for (var i = 0; i < images.length; i++) {
-                    var img = document.createElement("img");
-                    img.src = images[i].toString();
-                    img.setAttribute("width", "30%");
-                    messageImg.appendChild(img);
-                }
-                document.querySelector('.chat-body').append(messageImg);
-            }
-            document.querySelector('.chat-body').append(message);
-        });
-        hubConnection.start().catch(err => console.error(err.toString())).then(function () {
-            let chatId = document.getElementById("chatId").value;
-            hubConnection.invoke('getConnectionId', chatId)
-                .then(function (connectionId) {
-                    console.log("connectionID: " + connectionId);
-                    $("#signalRconnectionId").attr("value", connectionId);
-                });
-        });
-    </script>*@

@@ -5,19 +5,17 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using BusinessLogic.Interfaces;
-using DataAccess.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Social_Network.Models;
 using Social_Network.ViewModels;
 
 namespace Social_Network.Controllers
 {
-    //[Authorize(Roles = "User")]
-    [Authorize]
+    [Authorize(Roles = "User")]
     public class PostsController : Controller
     {
         private readonly IPostService _postService;
-        private readonly int _sizeLimit = 2;
+        private readonly int _sizeLimit = 5;
         public PostsController(IPostService postService)
         {
             _postService = postService;

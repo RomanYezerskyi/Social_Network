@@ -13,14 +13,14 @@ using Social_Network.ViewModels;
 
 namespace Social_Network.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class RolesController : Controller
     {
         private RoleManager<IdentityRole> _roleManager;
         private UserManager<User> _userManager;
         private readonly IRolesService _rolesService;
         private readonly IUserService _userService;
-        private readonly int _sizeLimit = 2;
+        private readonly int _sizeLimit = 7;
         public RolesController(RoleManager<IdentityRole> roleManager, UserManager<User> userManager, IRolesService rolesService, IUserService userService)
         {
             _roleManager = roleManager;
@@ -70,10 +70,11 @@ namespace Social_Network.Controllers
             return RedirectToAction("Roles");
         }
 
-        public async Task<IActionResult> UserList(int pageNum = 1)
+        public async Task<IActionResult> UserList(string search, int pageNum = 1)
         {
+            ViewData["CurrentFilter"] = search;
             pageNum = pageNum == 0 ? 1 : pageNum;
-            var users = await _userService.GetAllAsync(page: pageNum, limit: _sizeLimit);
+            var users = await _userService.GetAllAsync(page: pageNum, limit: _sizeLimit, search);
             PaginatedListModel paginatedListModel = new PaginatedListModel(users.count, pageNum, _sizeLimit);
             PageUsersViewModel viewModel = new PageUsersViewModel
             {

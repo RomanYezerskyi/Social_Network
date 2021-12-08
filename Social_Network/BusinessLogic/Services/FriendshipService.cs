@@ -67,10 +67,6 @@ namespace BusinessLogic.Services
             if (search != null)
             {
                 page = 1;
-                //int count = await _unitOfWork.Friendships.GetCountAsync(filter: x => (x.UserMainId == mainUserId && x.Status == FriendshipStatus.Accepted
-                //        && (x.Friend.Email.Contains(search) || x.Friend.UserName.Contains(search)) ||
-                //    (x.FriendId == mainUserId && x.Status == FriendshipStatus.Accepted && (x.UserMain.Email == search || x.UserMain.UserName == search))));
-
                 int count = await _unitOfWork.Friendships.GetCountAsync(searchExpression);
                 var friends = await _unitOfWork.Friendships.GetAsync(page: page, limit: limit,
                     filter: x => (x.UserMainId == mainUserId && x.Status == FriendshipStatus.Accepted
@@ -113,9 +109,9 @@ namespace BusinessLogic.Services
         }
         public async Task<(IEnumerable<User> users, int count)> GetUsersAsync(string userId, int page, int limit)
         {
-            int count = await _unitOfWork.User.GetCountAsync(filter: x => x.Id != userId && !x.UserName.Contains("Admin"));
+            int count = await _unitOfWork.User.GetCountAsync(filter: x => x.Id != userId && x.Email != "admin@admin");
             var users = await _unitOfWork.User.GetAsync(page: page, limit: limit,
-                filter: x => x.Id != userId && !x.UserName.Contains("Admin"),
+                filter: x => x.Id != userId && x.Email != "admin@admin",
                 includes: include =>
                     include.Include(x => x.FriendsIAdded).Include(x => x.Friends),
                 orderBy: orderBy => orderBy.OrderBy(u => u.UserName));
@@ -124,7 +120,6 @@ namespace BusinessLogic.Services
         public async Task<(IEnumerable<User> users, int count)> SearchUsersAsync(int page, int limit,
             string search = null, string sortOrder = null, string userId = null)
         {
-
             if (sortOrder != null)
             {
                 var sortedUsers = await GetUsersAsync(userId, page, limit);

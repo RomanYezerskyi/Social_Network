@@ -13,31 +13,35 @@
 <div class="">
     @if (Model != null)
     {
-        <table class="table" border="1">
+        <table class="table">
             <tr>
-                <td style="max-width: 95px;">
+                <td style="max-width: 122px;">
                     Chats:
                     <div>
                         @foreach (var chat in Model.Chats.ToList())
                         {
                             @if (@chat.Type == ChatType.Private)
                             {
-                                <table class="table" border="1">
+                                <table class="tableChat">
                                     <tr>
                                         <td>
                                             @if (@chat.Users.FirstOrDefault(x => x.UserId != userId) != null && 
                                                  @chat.Users.FirstOrDefault(x => x.UserId != userId).User.ProfileImage != null)
                                             {
-                                                <img style='width: 100px; height: auto; border-radius: 200px;' src="@chat.Users.FirstOrDefault(x => x.UserId != userId).User.ProfileImage" />
+                                                <div class="imageChat">
+                                                    <img style='width: 100%; height: auto; border-radius: 200px;' src="@chat.Users.FirstOrDefault(x => x.UserId != userId).User.ProfileImage" />
+                                                </div>
                                             }
-                                            <a class="room-button" asp-controller="Chats" asp-action="Chat" asp-route-id="@chat.Id">
+                                           
+                                        </td>
+                                        <td  style="width: 100%" class="chatTd">
+                                            <a asp-controller="Chats" asp-action="Chat" asp-route-id="@chat.Id" class="btn btn-outline-secondary" style="color: black">
 
                                                 @if (@chat.Users.FirstOrDefault(x => x.UserId != userId) != null)
                                                 {
                                                     @chat.Users.FirstOrDefault(x => x.UserId != userId).User.UserName
                                                 }
                                             </a>
-                                            <br />
                                         </td>
                                     </tr>
                                 </table>
@@ -52,17 +56,22 @@
                         {
                             @if (@chat.Type == ChatType.PrivateRoom)
                             {
-                                <table class="table" border="1">
+                                <table class="tableChat">
                                     <tr>
                                         <td>
                                             @if (@chat.ChatImage != null)
                                             {
-                                                <img style='width: 30%; height: auto;  border-radius: 200px' src="@chat.ChatImage" />
+                                                <div class="imageChat">
+                                                    <img style='width: 100%; height: auto;  border-radius: 200px' src="@chat.ChatImage" />
+                                                </div>
                                             }
-                                            <a class="room-button" asp-controller="Chats" asp-action="Chat" asp-route-id="@chat.Id">
+                                            
+                                        </td>
+                                        <td style="width: 100%" class="chatTd">
+                                            <a asp-controller="Chats" asp-action="Chat" asp-route-id="@chat.Id" class="btn btn-outline-secondary" style="color: black">
                                                 @chat.ChatName
                                             </a>
-                                            <br/>
+                                            <p>Members: @chat.Users.Count</p>
                                         </td>
                                     </tr>
                                 </table>

@@ -91,3 +91,12 @@ body {
     padding-left: 10px;
     width: 300px;
 }
+
+.tableChat td, .tableChat th {
+    vertical-align: middle;
+}
+.imageChat {
+    position: relative;
+    width: 100px;
+    overflow: hidden;
+}

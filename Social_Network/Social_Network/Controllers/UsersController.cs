@@ -19,17 +19,18 @@ namespace Social_Network.Controllers
     public class UsersController : Controller
     {
         private readonly IUserService _userService;
-        private readonly int _sizeLimit = 2;
+        private readonly int _sizeLimit = 7;
         public UsersController(IUserService userService)
         {
             _userService = userService;
         
         }
 
-        public async Task<IActionResult> AllUsers(int pageNum = 1)
+        public async Task<IActionResult> AllUsers(string search, int pageNum = 1)
         {
+            ViewData["CurrentFilter"] = search;
             pageNum = pageNum == 0 ? 1 : pageNum;
-            var users = await _userService.GetAllAsync(page: pageNum, limit: _sizeLimit);
+            var users = await _userService.GetAllAsync(page: pageNum, limit: _sizeLimit, search);
             PaginatedListModel paginatedListModel = new PaginatedListModel(users.count, pageNum, _sizeLimit);
             PageUsersViewModel viewModel = new PageUsersViewModel
             {

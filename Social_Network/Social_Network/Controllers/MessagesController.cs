@@ -30,7 +30,7 @@ namespace Social_Network.Controllers
             await _chat.Clients.Group(chatId).SendAsync("Send",
                 message.Text,
                 message.UserName,
-                message.TimeStamp.Hour,
+                message.TimeStamp.ToString("dd/MM/yyyy HH:mm:ss"),
                 imgData
             );
             return RedirectToAction("Chat", "Chats", new { id = chatId });

@@ -22,7 +22,7 @@ namespace Social_Network.Controllers
     public class HomeController : Controller
     {
         private readonly IChatService _chatService;
-        private readonly int _sizeLimit = 2;
+        private readonly int _sizeLimit = 6;
         public HomeController(IChatService chatService)
         {
             _chatService = chatService;
@@ -31,10 +31,10 @@ namespace Social_Network.Controllers
         {
             ViewData["CurrentFilter"] = search;
             pageNum = pageNum == 0 ? 1 : pageNum;
-            //if (User.IsInRole("Admin"))
-            //{
-            //    return RedirectToAction("AllUsers", "Users");
-            //}
+            if (User.IsInRole("Admin"))
+            {
+                return RedirectToAction("AllUsers", "Users");
+            }
             var chats = await _chatService.AllChatsPublicAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value, page: pageNum, limit: _sizeLimit, search);
             PaginatedListModel paginatedListModel = new PaginatedListModel(chats.count, pageNum, _sizeLimit);
             PageListChatsViewModel viewModel = new PageListChatsViewModel()

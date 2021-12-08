@@ -2,7 +2,12 @@
 
 
 <table class="table">
-    <tr><th></th><th>NickName</th><th>Email</th></tr>
+    <tr>
+        <th></th>
+        <th>NickName</th>
+        <th>Email</th>
+        <th>Member since</th>
+    </tr>
     <tr>
         <td style="width: 5%">
             @if (@Model.User.ProfileImage != null)
@@ -12,7 +17,7 @@
         </td>
         <td>@Model.User.UserName</td>
         <td>@Model.User.Email</td>
-        <td>@Model.User.MemberSince</td>
+        <td>@Model.User.MemberSince.ToString("dd/MM yyyy")</td>
     </tr>
 </table>
 <div>

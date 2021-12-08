@@ -35,17 +35,21 @@
 
                         @if (@chat.Users.FirstOrDefault(x => x.UserId == userId) != null)
                         {
-                            <table class="table" border="1">
+                            <table class="tableChat">
                                 <tr>
                                     <td>
                                         @if (@chat.ChatImage != null)
                                         {
-                                            <img style='width: 30%; height: auto;  border-radius: 200px' src="@chat.ChatImage" />
+                                            <div class="imageChat">
+                                                <img style='width: 100%; height: auto;  border-radius: 200px' src="@chat.ChatImage" />
+                                            </div>
                                         }
-                                        <a class="room-button" asp-controller="Chats" asp-action="JoinChat" asp-route-id="@chat.Id">
+                                    </td>
+                                    <td style="width: 100%" class="chatTd">
+                                        <a asp-controller="Chats" asp-action="JoinChat" asp-route-id="@chat.Id"class="btn btn-outline-secondary" style="color: black" >
                                             @chat.ChatName
                                         </a>
-                                        <br />
+                                        <p>Members: @chat.Users.Count</p>
                                     </td>
                                 </tr>
                             </table>
@@ -61,17 +65,21 @@
 
                         @if (@chat.Users.FirstOrDefault(x => x.UserId == userId) == null)
                         {
-                            <table class="table" border="1">
+                            <table class="tableChat">
                                 <tr>
                                     <td>
                                         @if (@chat.ChatImage != null)
                                         {
-                                            <img style='width: 30%; height: auto;  border-radius: 200px' src="@chat.ChatImage" />
+                                            <div class="imageChat">
+                                                <img style='width: 100%; height: auto;  border-radius: 200px' src="@chat.ChatImage" />
+                                            </div>
                                         }
-                                        <a class="room-button" asp-controller="Chats" asp-action="JoinChat" asp-route-id="@chat.Id">
+                                    </td>
+                                    <td style="width: 100%" class="chatTd">
+                                        <a asp-controller="Chats" asp-action="JoinChat" asp-route-id="@chat.Id" class="btn btn-outline-secondary" style="color: black">
                                             @chat.ChatName
                                         </a>
-                                        <br />
+                                        <p>Members: @chat.Users.Count</p>
                                     </td>
                                 </tr>
                             </table>

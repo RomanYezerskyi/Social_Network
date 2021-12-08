@@ -13,12 +13,11 @@ using Social_Network.ViewModels;
 
 namespace Social_Network.Controllers
 {
-    //[Authorize(Roles = "User")]
-    [Authorize]
+    [Authorize(Roles = "User")]
     public class FriendController : Controller
     {
         private readonly IFriendshipService _friendshipService;
-        private readonly int _sizeLimit = 4;
+        private readonly int _sizeLimit = 5;
         public FriendController(IFriendshipService friendshipService)
         {
             _friendshipService = friendshipService;

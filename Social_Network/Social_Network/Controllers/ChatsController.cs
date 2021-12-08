@@ -14,15 +14,14 @@ using Social_Network.ViewModels;
 
 namespace Social_Network.Controllers
 {
-    //[Authorize(Roles = "User")]
-    [Authorize]
+    [Authorize(Roles = "User")]
     public class ChatsController : Controller
     {
         private readonly IChatService _chatService;
         private readonly IMessageService _messageService;
         private readonly IUserService _userService;
         private readonly IFriendshipService _friendshipService;
-        private readonly int _sizeLimit = 2;
+        private readonly int _sizeLimit = 5;
         public ChatsController(IChatService chatService, IMessageService messageService,
             IUserService userService, IFriendshipService friendshipService)
         {
@@ -31,6 +30,7 @@ namespace Social_Network.Controllers
             _userService = userService;
             _friendshipService = friendshipService;
         }
+
         public IActionResult CreatePublicChat()
         {
             return View();
@@ -48,11 +48,9 @@ namespace Social_Network.Controllers
                     {
                         imageData = binaryReader.ReadBytes((int) chatModel.NewChatImage.Length);
                     }
-
                     var image = Convert.ToBase64String(imageData);
                     chatModel.ChatImage = $"data:image/jpeg;base64,{image}";
                 }
-
                 await _chatService.CreateChatPublicAsync(chatModel.ChatName, chatModel.AboutChat,
                     User.FindFirst(ClaimTypes.NameIdentifier).Value, chatModel.ChatImage);
                 return RedirectToAction("Index", "Home");
@@ -86,15 +84,12 @@ namespace Social_Network.Controllers
                     {
                         imageData = binaryReader.ReadBytes((int)chatModel.NewChatImage.Length);
                     }
-
                     var image = Convert.ToBase64String(imageData);
                     chatModel.ChatImage = $"data:image/jpeg;base64,{image}";
                 }
-
                 await _chatService.EditChat(chatModel.chatId,chatModel.ChatName, chatModel.AboutChat, chatModel.ChatImage);
                 return RedirectToAction("Chat", "Chats", new {id = chatModel.chatId});
             }
-
             return View(chatModel);
         }
 
@@ -106,8 +101,9 @@ namespace Social_Network.Controllers
 
 
         [HttpGet("Chat/{id}")]
-        public async Task<IActionResult> Chat(int id, int skip=1, int take=5)
+        public async Task<IActionResult> Chat(int id, int skip=1)
         {
+            int take = 10;
             var chat = await _chatService.GetChatAsync(id, skip, take);
             PaginatedListModel paginatedListModel = new PaginatedListModel(chat.countMessages, skip, take);
             PageOfChatPageViewModel viewModel = new PageOfChatPageViewModel()
@@ -115,7 +111,6 @@ namespace Social_Network.Controllers
                 PageMessagesViewModel = paginatedListModel,
                 Chat = chat.chat
             };
-          
             return View(viewModel);
         }
 
@@ -123,7 +118,6 @@ namespace Social_Network.Controllers
         public async Task<IActionResult> JoinChat(int id)
         {
             await _chatService.JoinPublicChatAsync(id, User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
             return RedirectToAction("Chat", "Chats", new { id = id });
         }
 
@@ -131,7 +125,6 @@ namespace Social_Network.Controllers
         public async Task<IActionResult> LeaveChat(int id)
         {
             await _chatService.LeaveChatAsync(id, User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
             return RedirectToAction("Index", "Home");
         }
 
@@ -139,7 +132,6 @@ namespace Social_Network.Controllers
         public async Task<IActionResult> DeleteChat(int id)
         {
             await _chatService.DeleteChatAsync(id, User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
             return RedirectToAction("Index", "Home");
         }
 
@@ -147,7 +139,6 @@ namespace Social_Network.Controllers
         public async Task<IActionResult> ClearChat(int id)
         {
             await _chatService.CleanChatAsync(id);
-
             return RedirectToAction("Chat", new { id = id });
         }
 

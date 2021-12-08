@@ -1,10 +1,19 @@
 ﻿@model Social_Network.ViewModels.PageUsersViewModel
-
+<form asp-action="UserList" method="post">
+    <div class="form-actions no-color">
+        <p>
+            Find: <input type="text" name="search" value="@ViewData["CurrentFilter"]" placeholder="Name or email" />
+            <input type="submit" value="Search" class="btn btn-default" /> |
+            <a asp-action="UserList" class="btn btn-outline-dark">Back to Full List</a> |
+        </p>
+    </div>
+</form>
 <h2>Users:</h2>
 <table class="table">
     @foreach (var user in Model.Users)
     {
         <tr>
+            <td>@user.UserName</td>
             <td>@user.Email</td>
             <td>
                 <a class="btn btn-sm btn-primary" asp-controller="Roles" asp-action="Edit" asp-route-userid="@user.Id">Access rights</a>
@@ -13,20 +22,20 @@
     }
 </table>
 @if (Model.PageViewModel.HasPreviousPage)
-    {
-<a asp-action="UserList"
-   asp-route-pageNum="@(Model.PageViewModel.PageNumber - 1)"
-   class="btn btn-outline-dark">
-    <i class="glyphicon glyphicon-chevron-left"></i>
-    Previous
-</a>
+{
+    <a asp-action="UserList"
+       asp-route-pageNum="@(Model.PageViewModel.PageNumber - 1)"
+       class="btn btn-outline-dark">
+        <i class="glyphicon glyphicon-chevron-left"></i>
+        Previous
+    </a>
 }
-    @if (Model.PageViewModel.HasNextPage)
-    {
-<a asp-action="UserList"
-   asp-route-pageNum="@(Model.PageViewModel.PageNumber + 1)"
-   class="btn btn-outline-dark">
-    Next
-    <i class="glyphicon glyphicon-chevron-right"></i>
-</a>
-    }
+@if (Model.PageViewModel.HasNextPage)
+{
+    <a asp-action="UserList"
+       asp-route-pageNum="@(Model.PageViewModel.PageNumber + 1)"
+       class="btn btn-outline-dark">
+        Next
+        <i class="glyphicon glyphicon-chevron-right"></i>
+    </a>
+}

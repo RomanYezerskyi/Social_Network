@@ -49,21 +49,21 @@ namespace Social_Network
                 options.Password.RequiredLength = 4;
             }).AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.AddScoped<IAsyncRepository<Chat>, BaseRepository<Chat>>();
-            services.AddScoped<IAsyncRepository<Message>, BaseRepository<Message>>();
-            services.AddScoped<IAsyncRepository<UsersInChats>, BaseRepository<UsersInChats>>();
-            services.AddScoped<IAsyncRepository<User>, BaseRepository<User>>();
-            services.AddScoped<IAsyncRepository<Friendship>, BaseRepository<Friendship>>();
-            services.AddScoped<IAsyncRepository<Post>, BaseRepository<Post>>();
-            services.AddScoped<IAsyncRepository<PostImages>, BaseRepository<PostImages>>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<IChatService,ChatService>();
-            services.AddScoped<IMessageService, MessageService>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IFriendshipService, FriendshipService>();
-            services.AddScoped<IPostService, PostService>();
-            services.AddScoped<IRolesService, RolesService>();
-            services.AddScoped<IImagesService, ImagesService>();
+            services.AddTransient<IAsyncRepository<Chat>, BaseRepository<Chat>>();
+            services.AddTransient<IAsyncRepository<Message>, BaseRepository<Message>>();
+            services.AddTransient<IAsyncRepository<UsersInChats>, BaseRepository<UsersInChats>>();
+            services.AddTransient<IAsyncRepository<User>, BaseRepository<User>>();
+            services.AddTransient<IAsyncRepository<Friendship>, BaseRepository<Friendship>>();
+            services.AddTransient<IAsyncRepository<Post>, BaseRepository<Post>>();
+            services.AddTransient<IAsyncRepository<PostImages>, BaseRepository<PostImages>>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<IChatService,ChatService>();
+            services.AddTransient<IMessageService, MessageService>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IFriendshipService, FriendshipService>();
+            services.AddTransient<IPostService, PostService>();
+            services.AddTransient<IRolesService, RolesService>();
+            services.AddTransient<IImagesService, ImagesService>();
             services.AddMvc(option => option.EnableEndpointRouting = false);
             services.AddSignalR();
         }

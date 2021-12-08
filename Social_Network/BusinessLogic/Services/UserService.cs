@@ -36,10 +36,19 @@ namespace BusinessLogic.Services
             return user;
         }
 
-        public async Task<(IEnumerable<User> users, int count)> GetAllAsync(int page, int limit)
+        public async Task<(IEnumerable<User> users, int count)> GetAllAsync(int page, int limit,string search= null)
         {
-            var count = await _unitOfWork.User.GetCountAsync();
-            var users =await _unitOfWork.User.GetAsync(orderBy: null, page: page, limit: limit);
+            int count = 0;
+            IEnumerable<User> users = null;
+            if (search != null)
+            {
+                count = await _unitOfWork.User.GetCountAsync(filter: x=> x.Email.Contains(search) || x.UserName.Contains(search));
+                users = await _unitOfWork.User.GetAsync(filter: x => x.Email.Contains(search) || x.UserName.Contains(search), 
+                    orderBy: x=>x.OrderByDescending(y=>y.MemberSince), page: page, limit: limit);
+                return (users, count);
+            }
+            count = await _unitOfWork.User.GetCountAsync();
+            users =await _unitOfWork.User.GetAsync(orderBy: x => x.OrderByDescending(y => y.MemberSince), page: page, limit: limit);
             return (users, count);
         }
 

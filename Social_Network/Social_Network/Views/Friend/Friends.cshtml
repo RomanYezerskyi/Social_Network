@@ -78,7 +78,7 @@
                             }
                             else
                             {
-                                <p>Last time online: @user.Friend.LastTimeOnline.ToString("dd/MM hh:mm")</p>
+                        <p>Last time online: @user.Friend.LastTimeOnline.ToShortDateString() @user.Friend.LastTimeOnline.ToShortTimeString()</p>
                             }
                         </div>
                     }
@@ -91,7 +91,7 @@
                             }
                             else
                             {
-                                <p>Last time online: @user.UserMain.LastTimeOnline.ToString("dd/MM hh:mm")</p>
+                        <p>Last time online: @user.UserMain.LastTimeOnline.ToShortDateString() @user.UserMain.LastTimeOnline.ToShortTimeString()</p>
                             }
                         </div>
                     }
