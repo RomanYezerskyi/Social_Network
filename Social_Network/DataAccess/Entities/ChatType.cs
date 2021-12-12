@@ -2,7 +2,7 @@
 {
     public enum ChatType
     {
-        Publlic,
+        Public,
         Private,
         PrivateRoom
     }

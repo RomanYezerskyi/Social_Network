@@ -10,13 +10,13 @@
 
 @if (@Model.Chat.Type == ChatType.Private || ((@Model.Chat.Users.FirstOrDefault(x => x.UserId == userId).Role == UserRoleInChatType.Owner
                                               || @Model.Chat.Users.FirstOrDefault(x => x.UserId == userId).Role == UserRoleInChatType.Admin)
-                                                  && (@Model.Chat.Type == ChatType.Publlic || @Model.Chat.Type == ChatType.PrivateRoom)))
+                                                  && (@Model.Chat.Type == ChatType.Public || @Model.Chat.Type == ChatType.PrivateRoom)))
 {
     <a asp-controller="Chats" asp-action="ClearChat" asp-route-id="@Model.Chat.Id" class="btn btn-outline-dark">
         Clear chat
     </a>
 }
-@if (@Model.Chat.Type == ChatType.Publlic || @Model.Chat.Type == ChatType.PrivateRoom)
+@if (@Model.Chat.Type == ChatType.Public || @Model.Chat.Type == ChatType.PrivateRoom)
 {
     @if (@Model.Chat.Users.FirstOrDefault(x => x.UserId == userId).Role == UserRoleInChatType.Member
        || @Model.Chat.Users.FirstOrDefault(x => x.UserId == userId).Role == UserRoleInChatType.Admin)
@@ -32,7 +32,7 @@
         </a>
     }
 }
-@if ((@Model.Chat.Type == ChatType.Publlic || @Model.Chat.Type == ChatType.PrivateRoom)
+@if ((@Model.Chat.Type == ChatType.Public || @Model.Chat.Type == ChatType.PrivateRoom)
    && (@Model.Chat.Users.FirstOrDefault(x => x.UserId == userId).Role == UserRoleInChatType.Owner ||
   @Model.Chat.Users.FirstOrDefault(x => x.UserId == userId).Role == UserRoleInChatType.Admin))
 {
@@ -40,7 +40,7 @@
         Edit chat
     </a>
 }
-@if (@Model.Chat.Type == ChatType.PrivateRoom || @Model.Chat.Type == ChatType.Publlic)
+@if (@Model.Chat.Type == ChatType.PrivateRoom || @Model.Chat.Type == ChatType.Public)
 {
     @if (@Model.Chat.Users.FirstOrDefault(x => x.UserId == userId).Role == UserRoleInChatType.Owner ||
       @Model.Chat.Users.FirstOrDefault(x => x.UserId == userId).Role == UserRoleInChatType.Admin)
@@ -117,7 +117,7 @@
         </div>
     </div>
     <div class="infoChat">
-        @if (@Model.Chat.Type == ChatType.Publlic || @Model.Chat.Type == ChatType.PrivateRoom)
+        @if (@Model.Chat.Type == ChatType.Public || @Model.Chat.Type == ChatType.PrivateRoom)
         {
             <div class="aboutChat">
                 <table border="1">
@@ -143,7 +143,6 @@
                     <td>Active: @Model.Chat.Users.Count(x => x.User.IsActive) </td>
                 </tr>
             </table>
-
         </div>
     </div>
 </div>
@@ -169,7 +168,6 @@
         message.appendChild(header);
         message.appendChild(p);
         message.appendChild(footer);
-
         if (images!=null){
             let messageImg = document.createElement("div");
                 for (var i = 0; i < images.length; i++) {

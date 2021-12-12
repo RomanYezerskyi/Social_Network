@@ -138,7 +138,7 @@ namespace BusinessLogic.Services
                 page = 1;
                 int count = await _unitOfWork.User.GetCountAsync(filter: filter => filter.UserName == search || filter.Email == search);
                 var users = await _unitOfWork.User.GetAsync(page: page, limit: limit,
-                    filter: filter => filter.UserName.Contains(search) || filter.Email.Contains(search),
+                    filter: filter => (filter.Id != userId) &&( filter.UserName.Contains(search) || filter.Email.Contains(search)),
                     includes: include =>
                         include.Include(x => x.FriendsIAdded).Include(x => x.Friends),
                     orderBy: orderBy => orderBy.OrderBy(x => x.UserName));

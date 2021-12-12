@@ -52,7 +52,7 @@ namespace BusinessLogic.Services
                 TimeStamp = DateTime.Now
             };
             await _unitOfWork.Posts.InsertAsync(post);
-            if (files.Count > 0)
+            if (files != null)
             {
                 var collectionImages = await _imagesService.AddImagesToPostAsync(files, post.Id);
                 post.Images = collectionImages;

@@ -15,7 +15,7 @@ namespace DataAccess
         private BaseRepository<Chat> _chats;
         private BaseRepository<Message> _messages;
         private BaseRepository<UsersInChats> _usersInChats;
-        private BaseRepository<User> _User;
+        private BaseRepository<User> _user;
         private BaseRepository<Friendship> _friendships;
         private BaseRepository<Post> _posts;
         private BaseRepository<PostImages> _images;
@@ -52,7 +52,7 @@ namespace DataAccess
         {
             get
             {
-                return _User ??= new BaseRepository<User>(_context);
+                return _user ??= new BaseRepository<User>(_context);
             }
         }
 

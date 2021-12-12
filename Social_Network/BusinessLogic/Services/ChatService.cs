@@ -62,7 +62,7 @@ namespace BusinessLogic.Services
                 ChatName = name,
                 AboutChat = aboutChat,
                 ChatImage = image,
-                Type = ChatType.Publlic
+                Type = ChatType.Public
             };
             chat.Users.Add(new UsersInChats()
             {
@@ -110,16 +110,16 @@ namespace BusinessLogic.Services
             if (search != null)
             {
                 page = 1;
-                var countSearch = await _unitOfWork.Chats.GetCountAsync(filter: chat => chat.Type == ChatType.Publlic && chat.ChatName == search);
+                var countSearch = await _unitOfWork.Chats.GetCountAsync(filter: chat => chat.Type == ChatType.Public && chat.ChatName == search);
                 var chatsSearch = await _unitOfWork.Chats.GetAsync(page: page, limit: limit,
-                    filter: chat => chat.Type == ChatType.Publlic && chat.ChatName.Contains(search),
+                    filter: chat => chat.Type == ChatType.Public && chat.ChatName.Contains(search),
                     includes: i => i.Include(user => user.Users).ThenInclude(u => u.User), orderBy: null);
                 return (chatsSearch, countSearch);
 
             }
-            int count = await _unitOfWork.Chats.GetCountAsync(filter: chat => chat.Type == ChatType.Publlic);
+            int count = await _unitOfWork.Chats.GetCountAsync(filter: chat => chat.Type == ChatType.Public);
             var chats = await _unitOfWork.Chats.GetAsync(page: page, limit: limit,
-                filter: chat => chat.Type == ChatType.Publlic, 
+                filter: chat => chat.Type == ChatType.Public, 
                 includes: i=>i.Include(user => user.Users).ThenInclude(u=>u.User), orderBy: null);
             return (chats, count);
         }
@@ -160,7 +160,7 @@ namespace BusinessLogic.Services
 
         public async Task DeleteChatAsync(int chatId, string userId)
         {
-            var chat = await _unitOfWork.Chats.GetAsync(filter: x => x.Id == chatId && x.Type == ChatType.Publlic 
+            var chat = await _unitOfWork.Chats.GetAsync(filter: x => x.Id == chatId && x.Type == ChatType.Public 
                 && x.Users.Any(y => y.Role == UserRoleInChatType.Owner && y.UserId == userId));
             await _unitOfWork.Chats.DeleteAsync(chat);
         }
@@ -258,7 +258,6 @@ namespace BusinessLogic.Services
                 }
                 return userInChat;
             }
-
             return null;
         }
     }

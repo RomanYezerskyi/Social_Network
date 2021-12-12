@@ -7,7 +7,7 @@
 {
     @foreach (var post in @Model.Posts.ToList())
     {
-        <table class="table" border="2px">
+        <table class="table" border="2px" style="width: 500px">
             <tr>
                 <td>
                     @if (@post.User.ProfileImage != null)
@@ -27,7 +27,7 @@
                     <td colspan="3">
                         @foreach (var image in @post.Images)
                         {
-                            <img style='width: 100px; height: auto;' src="@image.ImageData" />
+                            <img style='width: auto; height: auto;' src="@image.ImageData" />
                         }
                     </td>
                 </tr>
